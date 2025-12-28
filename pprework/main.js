@@ -246,9 +246,6 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
     starHT = Math.round(starHT * 100) / 100
     let starDT = starFormulas["valerusRework"](difficultyDT);
     starDT = Math.round(starDT * 100) / 100
-    console.log(difficulty);
-    console.log(difficultyDT);
-    console.log(difficultyHT);
     
     if (currentSr == -1)
     {

@@ -42,6 +42,9 @@ diffSrValues = [
     0.00,// Whopper Whopper (Extended) Lyrics
 
     7.65,// ETA bunnies
+
+    2.97, // C-TYPE Normal
+    5.31,// C-TYPE Hard
 ];
 diffSrId = [
     "nesu_3_3", //PADORU / PADORU Easy
@@ -87,4 +90,7 @@ diffSrId = [
     "82eo_0_0", // Whopper Whopper (Extended) Lyrics
 
     "yq7u_0_0_0_0_0_0", // ETA bunnies
+
+    "8pxt_0", // C-TYPE Normal
+    "u7f1_1", // C-TYPE Hard
 ];

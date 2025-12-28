@@ -504,7 +504,7 @@ starFormulas = {
     let densityBonus =1 + (startTimes.length / drainTime) / 10;
     let core = Math.sqrt(noteDiffs / Math.sqrt(drainTime));
     //let coreDecay = 1 - (Math.max(core / 38, 1) - 1);
-    let coreDecay = Math.pow(1/Math.max(core / 38, 1),1.2);
+    let coreDecay = Math.pow(1/Math.max(core / 34, 1),1.4);
     if (coreDecay == 0)
       coreDecay = 1;
     core = core * coreDecay;
