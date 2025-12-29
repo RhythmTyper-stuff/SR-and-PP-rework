@@ -100,8 +100,8 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
   tableText += "<th>TSCount</th>";
   tableText += "<th>OldStar</th>";
   tableText += "<th>NewStar</th>";
-  tableText += "<th>NewStar (NC/DT)</th>";
-  tableText += "<th>NewStar (DC/HT)</th>";
+  //tableText += "<th>NewStar (NC/DT)</th>";
+  //tableText += "<th>NewStar (DC/HT)</th>";
   //tableText += "<th>Star without ts bonus</th>";
   tableText += "</tr>";
 
@@ -201,22 +201,26 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
     {
       if (difficulty.notes[i].type == "tap")
       {
-        let tempNoteHT = {type: "", time: 0};
+        let tempNoteHT = {type: "", time: 0, key: ""};
         tempNoteHT.type = difficulty.notes[i].type;
+        tempNoteHT.key = difficulty.notes[i].key;
         difficultyHT.notes.push(tempNoteHT);
-        let tempNoteDT = {type: "", time: 0};
+        let tempNoteDT = {type: "", time: 0, key: ""};
         tempNoteDT.type = difficulty.notes[i].type;
+        tempNoteDT.key = difficulty.notes[i].key;
         difficultyDT.notes.push(tempNoteDT);
         difficultyHT.notes[i].time = difficulty.notes[i].time / 0.75;
         difficultyDT.notes[i].time = difficulty.notes[i].time / 1.5;
       }
       else
       {
-        let tempNoteHT = {type: "", startTime: 0, endTime: 0};
+        let tempNoteHT = {type: "", startTime: 0, endTime: 0, key: ""};
         tempNoteHT.type = difficulty.notes[i].type;
+        tempNoteHT.key = difficulty.notes[i].key;
         difficultyHT.notes.push(tempNoteHT);
-        let tempNoteDT = {type: "", startTime: 0, endTime: 0};
+        let tempNoteDT = {type: "", startTime: 0, endTime: 0, key: ""};
         tempNoteDT.type = difficulty.notes[i].type;
+        tempNoteDT.key = difficulty.notes[i].key;
         difficultyDT.notes.push(tempNoteDT);
         difficultyHT.notes[i].startTime = difficulty.notes[i].startTime / 0.75;
         difficultyHT.notes[i].endTime = difficulty.notes[i].endTime / 0.75;
@@ -240,12 +244,12 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
       
     }
     //let star = starFormulas["originalCalculate"](difficultySeconds);
-    let star = starFormulas["valerusRework"](difficulty);
+    let star = starFormulas["valerusReworkV2"](difficulty);
     star = Math.round(star * 100) / 100
-    let starHT = starFormulas["valerusRework"](difficultyHT);
-    starHT = Math.round(starHT * 100) / 100
-    let starDT = starFormulas["valerusRework"](difficultyDT);
-    starDT = Math.round(starDT * 100) / 100
+    //let starHT = starFormulas["valerusRework"](difficultyHT);
+    //starHT = Math.round(starHT * 100) / 100
+    //let starDT = starFormulas["valerusRework"](difficultyDT);
+    //starDT = Math.round(starDT * 100) / 100
     
     if (currentSr == -1)
     {
@@ -258,7 +262,7 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
         console.log(difficulty.diffId + " "+ mapSongName + " " + difficulty.name)
       }
     }
-    tableText += "<td>"+ currentSr +"</td>";
+    tableText += "<td>"+ String(currentSr).replace(".",",") +"</td>";
     let colorR = 0;
     let colorG = 0;
     let colorB = 0;
@@ -272,9 +276,9 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
       let changeSize = Math.min(star/currentSr, 2) / 2;
       colorR = Math.round(0 + 250*changeSize);
     }
-    tableText += "<td style=\"color:rgb("+colorR+","+colorG+","+colorB+");\">"+ star +"</td>";
-    tableText += "<td>" + starDT + "</td>";
-    tableText += "<td>" + starHT + "</td>";
+    tableText += "<td style=\"color:rgb("+colorR+","+colorG+","+colorB+");\">"+ String(star).replace(".",",") +"</td>";
+    //tableText += "<td>" + starDT + "</td>";
+    //tableText += "<td>" + starHT + "</td>";
     difficulty.accuracy = 100;
     //let pp = ppFormulas["originalCalculate"](difficulty);
     //pp = Math.round(pp);

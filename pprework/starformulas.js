@@ -307,6 +307,11 @@ starFormulas = {
     //Whem slider is so fast that it is actually just a button
     const SLIDER_MIN_LENGTH = 50;
 
+    //For calculating the amount of keys you have to press at max.
+    const DENSITY_THRESHOLD = 10000;
+
+    //If key is pressed after such a short time then it is a pattern.
+    const REPEAT_THRESHOLD = 5000;
     
     let noteDiffs = 0;
     let minTime = 0;
@@ -395,7 +400,7 @@ starFormulas = {
         }
       }
     }
-    
+
     idCounter = 0;
     for (const typingSection of typingSections)
     {
@@ -444,14 +449,137 @@ starFormulas = {
     }
     const drainTime = Math.round((maxTime - minTime) / 1000)   
 
+    
+    const getStartTime = x => {
+      if (x.type == "tap")
+        return x.time;
+      if (x.type == "hold")
+        return x.startTime;
+    }
 
+    let maxDensity = 0;
+    for (let i = 0; i < idsTimes.length; ++i)
+    {
+      for (let j = 0; j < idsTimes[i].length; ++j)
+      {
+        if (idsTimes[i][j] <0)
+          continue;
+        let alreadyEnded = false;
+        let countOfNotes = 1;
+        for (let k = i; k < idsTimes.length; ++k)
+        {
+          let end = getStartTime(notes[idsTimes[i][j]]) + DENSITY_THRESHOLD;
+          for (let l = j + 1; l < idsTimes[k].length; ++l)
+          {
+            if (getStartTime(notes[idsTimes[k][l]]) > end)
+            {
+              alreadyEnded = true;
+              break;
+            }
+            else
+            {
+              countOfNotes++;
+            }
+          }
+          if (alreadyEnded)
+          {
+            if (maxDensity < countOfNotes)
+              maxDensity = countOfNotes;              
+            break;
+          }
+        }
+      }
+    }
+    
+    
+    let notesOnKeyboard = [
+      [],[],[],[],[], [],[],[],[],[],
+      [],[],[],[],[], [],[],[],[],[], 
+      [],[],[],[],[], [],[],[],[],[],
+    ]
+    
+    let notesOnKeyboardIdTime = [
+      [],[],[],[],[], [],[],[],[],[],
+      [],[],[],[],[], [],[],[],[],[], 
+      [],[],[],[],[], [],[],[],[],[],
+    ]
+
+    let keyboardId = [];
+
+    let keyboardLetters = [
+      "q","w","e","r","t", "y","u","i","o","p",
+      "a","s","d","f","g", "h","j","k","l",";",
+      "z","x","c","v","b", "n","m",",",".","/",
+    ]
+
+    const getColumnKeyboard = x => { 
+      return keyboardLetters.indexOf(x.key) % 10;
+     }
+
+    const getRowKeyboard = x => { 
+      return (keyboardLetters.indexOf(x.key) - keyboardLetters.indexOf(x.key) % 10) / 10;
+     }
+    for (let i = 0; i < idsTimes.length; ++i)
+    {
+      keyboardId.push([]);
+      for (let j = 0; j < idsTimes[i].length; ++j)
+      {
+        if (idsTimes[i][j] < 0)
+        continue;
+        if (notes[idsTimes[i][j]] == null)
+        {
+          //console.log(keyboardIndex);
+          console.log(idsTimes[i][j]);
+          console.log(notes[idsTimes[i][j]]);
+          console.log(scoreData);
+
+        }
+        let keyboardIndex = keyboardLetters.indexOf(notes[idsTimes[i][j]].key);
+        keyboardId[i].push(keyboardIndex);
+
+
+        notesOnKeyboard[keyboardIndex].push(notes[idsTimes[i][j]]);
+        notesOnKeyboardIdTime[keyboardIndex].push([i, j]);
+      }
+      
+    }
+
+    //console.log(keyboardId);
+    //console.log(notesOnKeyboard);
+    //console.log(notesOnKeyboardIdTime);
+
+    
 
     let previousNoteEndTime = 0;
     let previousNoteStartTime = 0;
     let heldNotesEndTimes = [];
     for (let i = 0; i < startTimes.length; ++i)
     {
-      
+      let fingerMoveBuff = 1;
+      if (i != 0)
+      {
+        for (let j = 0; j < idsTimes[i].length; ++j)
+        {
+          if (idsTimes[i][j] < 0)
+            continue;
+          let noteSingleOutside = notes[idsTimes[i][j]];
+          let rowOutside = getRowKeyboard(noteSingleOutside);
+          let columnOutside = getColumnKeyboard(noteSingleOutside);
+          for (let k = 0; k < idsTimes[i - 1].length; ++k)
+          { 
+            if (idsTimes[i - 1][k] < 0)
+              continue;
+            let noteSingleInside = notes[idsTimes[i-1][k]];
+            let rowInside = getRowKeyboard(noteSingleInside);
+            let columnInside = getColumnKeyboard(noteSingleInside);
+            if (rowInside == rowOutside && columnInside != columnOutside)
+            {
+              fingerMoveBuff+= (getStartTime(noteSingleOutside)-getStartTime(noteSingleInside))/500;
+            }
+          }
+        }
+      }
+
       for (let j = 0; j < heldNotesEndTimes.length; ++j)
       {
         if (heldNotesEndTimes[j] < startTimes[i])
@@ -460,55 +588,196 @@ starFormulas = {
           --j;
         }
       }
-      let multipleBonus = 1 / (2 * timeCount[i]);
-      let heldNoteBonus = 1/(heldNotesEndTimes.length + 1);
+      let multipleBonus = 1 / (2 * Math.min(timeCount[i],8));
+      let heldNoteBonus = 4 * heldNotesEndTimes.length;
+      if (heldNoteBonus == 0)
+        heldNoteBonus = 1;
       let difference = (startTimes[i] - previousNoteEndTime);
       if (previousNoteEndTime >= startTimes[i])
         difference = (startTimes[i] - previousNoteStartTime);
-      if (heldNoteBonus > 1)
-      {
-        console.log(heldNoteBonus);
-        console.log(heldNotesEndTimes.length);
-        console.log(heldNotesEndTimes);
-      }
+      //if (heldNoteBonus > 1)
+      //{
+      //  console.log(heldNoteBonus);
+      //  console.log(heldNotesEndTimes.length);
+      //  console.log(heldNotesEndTimes);
+      //}
       
-      difference = heldNoteBonus * multipleBonus * difference * ((multipleBonus - 1) / 1.5 + 1);
+      
+      difference =multipleBonus * heldNoteBonus *  (DISTANCE_SCALE / difference) * ((multipleBonus - 1) / 1.5 + 1);
+      
       if (previousNoteEndTime == 0)
         difference = 1;
-      if (difference < 1)
-      {
-        console.log(i+" "+difference);
-        console.log(startTimes.slice(i-2,i+1));
-        console.log(endTimes.slice(i-2,i+1));
-      }
-        
-      //difference = Math.max(difference, 1);
-      difference = DISTANCE_SCALE / difference;
-      let decay = 1;
-      //let decayLimit = 3*drainTime
-      //if (startTimes.length > decayLimit)
-      //{
-      //  decay = Math.min((-noteDiffCounter+decayLimit+(startTimes.length - decayLimit))/(startTimes.length - decayLimit),1);
-      //}
-      noteDiffs += difference * decay;
+      //difference += 10 * fingerMoveBuff;
+      noteDiffs += difference;
       previousNoteEndTime = endTimes[i];
       previousNoteStartTime = startTimes[i];
       if (endTimes[i] > startTimes[i] && !heldNotesEndTimes.includes(endTimes[i]))
         heldNotesEndTimes.push(endTimes[i]);
+
+      
+      
     }   
     let lenBonus = drainTime / 60;
     if (lenBonus > 1)
     {
       lenBonus = Math.sqrt(lenBonus);
-    }
+    }    
+
+    //let uniqueKeys = new Set(notes.map(x => x.key));
+
+    let hardSectionNerf = (1-(2-(1/(1-(maxDensity / notes.length))))) * 0.1 + 0.90;
+    hardSectionNerf = Math.min(hardSectionNerf, 1);
+    let density = startTimes.map(x => x.length).reduce((acc, n) => acc + n, 0) / drainTime;
+    if (density > 5)
+      hardSectionNerf = 1;
+    if (notes.length == 0)
+      hardSectionNerf = 1;
+
     let densityBonus =1 + (startTimes.length / drainTime) / 10;
-    let core = Math.sqrt(noteDiffs / Math.sqrt(drainTime));
+    let core = Math.sqrt(noteDiffs / Math.sqrt(drainTime)) ;
     //let coreDecay = 1 - (Math.max(core / 38, 1) - 1);
-    let coreDecay = Math.pow(1/Math.max(core / 35, 1),1.4);
+    let coreDecayStart = Math.max(core / 4, 60);
+    coreDecayStart = 1;
+    let coreDecay = Math.pow(1/Math.max(core / coreDecayStart, 1),1.4);
     if (coreDecay == 0)
       coreDecay = 1;
-    core = core * coreDecay;
-    let result = Math.pow(core * STAR_SCALE * densityBonus, 1.34);
+    core = core; //* coreDecay;
+
+    let result = Math.pow(core * STAR_SCALE * densityBonus * hardSectionNerf, 1.35);
+    
+    
     return result; 
   },
+
+  valerusReworkV2(scoreData)
+  {
+    const notes = scoreData.notes;
+    const typingSections = scoreData.typingSections;
+    const KEYBOARDLAYOUT = [
+      "q","w","e","r","t", "y","u","i","o","p",
+      "a","s","d","f","g", "h","j","k","l",";",
+      "z","x","c","v","b", "n","m",",",".","/",
+    ];
+    const TOTALOBJECTS = notes.length + typingSections.length; 
+    const OBJECTTIMEDIFFERENCE = 500;
+    const REWARDTIMEDIFFERENCE = OBJECTTIMEDIFFERENCE / 2;
+    const OBJECTOVERWEIGHTLIMIT = 20;
+    const getKeyboardRow = x => {
+      return (KEYBOARDLAYOUT.indexOf(x.key) - KEYBOARDLAYOUT.indexOf(x.key) % 10) / 10;
+    }
+    const getKeyboardColumn = x => {
+      return KEYBOARDLAYOUT.indexOf(x.key) % 10;
+    }
+    const getStartTime = x => {
+      if (x.type == "tap")
+        return x.time;
+      if (x.type == "hold")
+        return x.startTime;
+    }
+    const getEndTime = x => {
+      if (x.type == "tap")
+        return x.time;
+      if (x.type == "hold")
+        return x.endTime;
+    }    
+    let minTime = Infinity;
+    let maxTime = 0;
+    let typingSectionDifficulties = [];
+    let typingSectionTime = 0;
+    for (let i = 0; i < typingSections.length; ++i)
+    {
+      if (typingSections[i].startTime < minTime)
+        minTime = typingSections[i].startTime;
+      if (typingSections[i].endTime > maxTime)
+        maxTime = typingSections[i].endTime;
+      typingSectionDifficulties.push(1000);
+    }
+    let sortedTimeNotes = [];
+    let noteDifficulties = [];
+    let heldNoteCounts = [];
+    for (let i = 0; i < notes.length; ++i)
+    {
+      if (getStartTime(notes[i]) < minTime)
+        minTime = getStartTime(notes[i]);
+      if (getEndTime(notes[i]) > maxTime)
+        maxTime = getEndTime(notes[i]);
+      sortedTimeNotes.push(i);
+      noteDifficulties.push(1000);
+      heldNoteCounts.push(0);
+    }
+    const drainTime = maxTime - minTime;
+    const drainTimeSecond = drainTime / 1000;
+
+    for (let i = 0; i < sortedTimeNotes.length - 1; ++i)
+    {
+      for (let j = i + 1; j < sortedTimeNotes.length; ++j)
+      {
+        if (getStartTime[notes[sortedTimeNotes[i]]] > getStartTime[notes[sortedTimeNotes[j]]])
+        {
+          let temp = sortedTimeNotes[i];
+          sortedTimeNotes[i] = sortedTimeNotes[j];
+          sortedTimeNotes[j] = temp;
+        }
+      }
+    }
+
+    /*let keyboardNotes = [
+      [],[],[],[],[], [],[],[],[],[],
+      [],[],[],[],[], [],[],[],[],[],
+      [],[],[],[],[], [],[],[],[],[],
+    ];
+    let sortedKeyboardIds = [];
+    for (let i = 0; i < sortedTimeNotes.length; ++i)
+    {
+      let selectedNote = notes[sortedTimeNotes[i]];
+      let keyboardIndex = KEYBOARDLAYOUT.indexOf(selectedNote.key);
+      sortedKeyboardIds.push(keyboardIndex);
+      keyboardNotes[keyboardIndex].push(selectedNote);
+    }*/
+    let objectDifficultySum = 0;
+    for (let i = 1; i < sortedTimeNotes.length; ++i)
+    {
+      let selectedNoteIndex = sortedTimeNotes[i];
+      let previousNoteIndex = sortedTimeNotes[i - 1];
+      
+      for (let j = i + 1; j < sortedTimeNotes.length; ++j)
+      {
+        if (notes[sortedTimeNotes[i]].type != "hold")
+          break;
+        let nextNoteIndex = sortedTimeNotes[j];
+        let selectedEndTime = getEndTime(notes[selectedNoteIndex]);
+        let nextStartTime = getStartTime(notes[nextNoteIndex]);
+        if (selectedEndTime > nextStartTime)
+          heldNoteCounts[nextNoteIndex]++;
+        else if (selectedEndTime < nextStartTime)
+          break;
+      }
+
+      let timeDurationBonus = 1;      
+      let previousEndTime = getEndTime(notes[previousNoteIndex]);
+      let selectedStartTime = getStartTime(notes[selectedNoteIndex]);
+      if (selectedStartTime > previousEndTime)
+        timeDurationBonus = OBJECTTIMEDIFFERENCE / (selectedStartTime - previousEndTime + REWARDTIMEDIFFERENCE)
+      let heldNoteBonus = Math.pow(heldNoteCounts[selectedNoteIndex] + 1, 1/1.12);
+
+      objectDifficultySum += noteDifficulties[selectedNoteIndex] * timeDurationBonus * heldNoteBonus;
+    }
+    for (let i = 0; i < typingSectionDifficulties.length; ++i)
+    {
+      let uniqueLetters = new Set(typingSections[i].text);
+      let letterLackNerf = Math.min((uniqueLetters.size / typingSections[i].text.length) + 0.5, 1);
+      objectDifficultySum += typingSectionDifficulties[i] * letterLackNerf;
+    }
+    let objectDensity = TOTALOBJECTS/drainTimeSecond;
+    let highObjectDensityPower = Math.pow(objectDensity, 0.54);
+    let tooHighObjectCountNerf = Math.pow(Math.min(1/(objectDensity)+(1-1/OBJECTOVERWEIGHTLIMIT),1),highObjectDensityPower);
+    let difficultyDensity = objectDifficultySum * tooHighObjectCountNerf / drainTime;
+    if (difficultyDensity > 8)
+    {
+      difficultyDensity =8*Math.pow(difficultyDensity/8,0.4);
+    }
+    
+    return difficultyDensity;
+
+  }
 };

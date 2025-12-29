@@ -45,6 +45,103 @@ diffSrValues = [
 
     2.97, // C-TYPE Normal
     5.31,// C-TYPE Hard
+
+    7.43, // Live and Learn yeah
+
+    1.78, // Cat Loving (kageminori bootleg) Easy
+    6.50, // Cat Loving (kageminori bootleg) Insane
+
+    12.95, // kitty kitty cat :3
+
+    1.53, // Pretty Little Psycho (Nightcore & Cut Ver.) Easy
+    1.56, // Pretty Little Psycho (Nightcore & Cut Ver.) Normal
+    2.81, // Pretty Little Psycho (Nightcore & Cut Ver.) Hard
+    3.24, // Pretty Little Psycho (Nightcore & Cut Ver.) Hyper
+
+    2.97, // Brain Implosion Energy Drink (feat. Kasane Teto) 1.000g
+    4.03, // Brain Implosion Energy Drink (feat. Kasane Teto) 10.000g
+
+    1.38, // MEJIRUSHI Normal
+    2.59, // MEJIRUSHI Hard
+    4.85, // MEJIRUSHI Insane
+
+    2.41, // R4V3 B0Y Normal
+    4.35, // R4V3 B0Y Hard
+
+    1.00, // Twinkle, Twinkle, Little Star Tutorial difficulty
+
+    6.24, // Kashika Visualization
+
+    1.37, // Spelunker Easy
+    2.40, // Spelunker Normal
+    4.13, // Spelunker Hyper
+    6.32, // Spelunker Prece Enter Key
+
+    11.79, // Jingle Bells! merikuri
+
+    3.21, // Running In The Dark Hard
+
+    1.04, // Dango Daikazoku Asleep Beginner
+    2.80, // Dango Daikazoku Cozy Dumpling
+    4.64, // Dango Daikazoku Big Dumpling
+    5.79, // Dango Daikazoku Big Dumpling Family
+
+    9.24, // Vivid Expert
+
+    1.30, // Codependence Service Club Easy
+    2.66, // Codependence Service Club Normal
+    3.76, // Codependence Service Club Hard
+
+    1.25, // Mizuoto to Curtain Beginner
+    7.96, // Mizuoto to Curtain Raindrop
+
+    2.78, // Humans treat us like humans
+
+    5.62, // ...Baby One More Time Heartbreak Collab
+
+    1.08, // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Beginner
+    1.60, // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Easy
+    2.67, // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Normal
+    3.43, // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Hard
+
+    1.85, // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Easy
+    2.43, // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Normal
+    3.74, // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Hard
+    6.01, // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Extreme
+
+    12.71, // Niflheimr World of Mist
+
+    1.84, // KING Normal
+    3.74, // KING Hard
+    5.71, // KING Insane
+
+    1.88, // Spider Dance standard
+    4.32, // Spider Dance hard
+
+    4.91, // Rhythm Superstore Rhythm Superstore
+
+    9.46, // WHAT'S UP? don't walk like this
+
+    1.81, // Cherry Pop (Cut Ver.) Newbie
+    2.32, // Cherry Pop (Cut Ver.) Intermediate
+    3.90, // Cherry Pop (Cut Ver.) Tricky
+
+    7.56, // Canon in D Hard+
+
+    6.47, // sus ayamus
+
+    9.56, // Destr0yer Bennett's Destr0yed
+
+    3.52, // Brazil Normal
+    5.78, // Brazil Hard
+    6.63, // Brazil Insane
+    7.17, // Brazil Extreme
+    7.69, // Brazil Atomic Scope
+
+    0.79, // Extratone Pirates TOO EASY
+    3.43, // Extratone Pirates NOVICE
+    22.26, // Extratone Pirates EXTRA EXTREME
+
 ];
 diffSrId = [
     "nesu_3_3", //PADORU / PADORU Easy
@@ -93,4 +190,100 @@ diffSrId = [
 
     "8pxt_0", // C-TYPE Normal
     "u7f1_1", // C-TYPE Hard
+
+    "9aqt", // Live and Learn yeah
+
+    "ikdz_1_0_0_0", // Cat Loving (kageminori bootleg) Easy
+    "kvci_1_1_1", // Cat Loving (kageminori bootleg) Insane
+
+    "8qk0_0", // kitty kitty cat :3
+
+    "hs4l", // Pretty Little Psycho (Nightcore & Cut Ver.) Easy
+    "wyme", // Pretty Little Psycho (Nightcore & Cut Ver.) Normal
+    "00sw", // Pretty Little Psycho (Nightcore & Cut Ver.) Hard
+    "jk78", // Pretty Little Psycho (Nightcore & Cut Ver.) Hyper
+
+    "evmq_1_1_1", // Brain Implosion Energy Drink (feat. Kasane Teto) 1.000g    
+    "iwo6_0_0_0_0_0_0_0_0", // Brain Implosion Energy Drink (feat. Kasane Teto) 10.000g
+
+    "403l_1_1_1_0", // MEJIRUSHI Normal
+    "x57u_0_0_0_1", // MEJIRUSHI Hard
+    "ohyi_2_2_2_2", // MEJIRUSHI Insane
+
+    "jwgn_1_1", // R4V3 B0Y Normal    
+    "45aa_0_0_0_0_0_0", // R4V3 B0Y Hard
+
+    "bjaa_0", // Twinkle, Twinkle, Little Star Tutorial difficulty
+
+    "6hgi_0_0_0", // Kashika Visualization
+
+    "kf2p_0", // Spelunker Easy
+    "m20u_1", // Spelunker Normal
+    "4zaz_2", // Spelunker Hyper
+    "wsc6_3", // Spelunker Prece Enter Key
+
+    "8x0i_0_0", // Jingle Bells! merikuri
+
+    "5ubj_0", // Running In The Dark Hard
+
+    "o85v_1", // Dango Daikazoku Asleep Beginner
+    "lgjw_0", // Dango Daikazoku Cozy Dumpling
+    "xvis_2", // Dango Daikazoku Big Dumpling
+    "vpff_3", // Dango Daikazoku Big Dumpling Family
+
+    "a2ki_0", // Vivid Expert
+
+    "74yq", // Codependence Service Club Easy
+    "mdjt", // Codependence Service Club Normal
+    "fqwr_0_0", // Codependence Service Club Hard
+
+    "6z9d_0_0_0_0_0_0_0_0", // Mizuoto to Curtain Beginner
+    "zje6_1_1_1_1_1_1", // Mizuoto to Curtain Raindrop
+
+    "wwp5_0_0", // Humans treat us like humans
+
+    "sfnn_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0", // ...Baby One More Time Heartbreak Collab
+
+    "vc7d_0_0_0_0_0", // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Beginner
+    "4jj8_1_1_1_1_1", // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Easy    
+    "r0gi", // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Normal
+    "6ws1_2_2_2_2_2", // Miniministop Hitoyasumi no Uta[Mokuyoubi]Gakusei no Uta Hard
+
+    "plsk_2_2", // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Easy
+    "izx7_3", // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Normal
+    "3i89_1_1", // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Hard
+    "skli_0_0_0", // Take a Hint feat. Victoria Justice & Elizabeth Gillies (Speed Up Ver.) Extreme
+
+    "08b7_0_0_0", // Niflheimr World of Mist
+
+    "n4ab_0_0_0", // KING Normal
+    "8uv8_1_1_1", // KING Hard
+    "eixb_2_2", // KING Insane
+
+    "umib_0_0_0_0_0", // Spider Dance standard    
+    "6pdu_1", // Spider Dance hard
+
+    "8lmt_0", // Rhythm Superstore Rhythm Superstore
+
+    "dldf_0_0", // WHAT'S UP? don't walk like this
+
+    "ww01_1_0", // Cherry Pop (Cut Ver.) Newbie
+    "lmg6_0_1", // Cherry Pop (Cut Ver.) Intermediate
+    "2k9g_2_2", // Cherry Pop (Cut Ver.) Tricky
+
+    "f2bd_0_0", // Canon in D Hard+
+
+    "izru_0", // sus ayamus
+
+    "75mq_0_0", // Destr0yer Bennett's Destr0yed
+
+    "g3hc_0", // Brazil Normal
+    "ucqo_1", // Brazil Hard
+    "miau_2", // Brazil Insane
+    "i3i8_3", // Brazil Extreme
+    "suy4_4", // Brazil Atomic Scope
+
+    "cx20_2", // Extratone Pirates TOO EASY
+    "s7fr_1_1", // Extratone Pirates NOVICE
+    "idae_0_0_0", // Extratone Pirates EXTRA EXTREME
 ];
