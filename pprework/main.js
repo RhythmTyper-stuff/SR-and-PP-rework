@@ -92,18 +92,23 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
   const table = document.getElementById("diffList");  
   let tableText = "";
   tableText += "<tr>";
-  tableText += "<th>Map</th>";
-  tableText += "<th>Difficulty</th>";
+  tableText += "<th style=\"width:5%;\">Map</th>";
+  tableText += "<th style=\"width:5%;\">Difficulty</th>";
   tableText += "<th>BPM</th>";
   tableText += "<th>DrainTime</th>";
   tableText += "<th>NoteCount</th>";
   tableText += "<th>TSCount</th>";
   tableText += "<th>OldStar</th>";
   tableText += "<th>NewStar</th>";
+  tableText += "<th>OldPP</th>";
+  tableText += "<th>NewPP</th>";
   //tableText += "<th>NewStar (NC/DT)</th>";
   //tableText += "<th>NewStar (DC/HT)</th>";
   //tableText += "<th>Star without ts bonus</th>";
   tableText += "</tr>";
+  let recreateSRList = false;
+  let recreatePPList = false;
+  
 
   for (const difficulty of difficultyList)
   {
@@ -129,8 +134,8 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
         break;
       }      
     }
-    tableText += "<td>"+ mapSongName +"</td>";
-    tableText += "<td>"+ difficulty.name +"</td>";
+    tableText += "<td style=\"width:5%;\">"+ mapSongName +"</td>";
+    tableText += "<td style=\"width:5%;\">"+ difficulty.name +"</td>";
     tableText += "<td>"+ mapBpm +"</td>";
     let minTime = -1;
     let maxTime = 0;
@@ -251,6 +256,7 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
     //let starDT = starFormulas["valerusRework"](difficultyDT);
     //starDT = Math.round(starDT * 100) / 100
     
+
     if (currentSr == -1)
     {
       if (diffSrId.includes(difficulty.diffId))
@@ -259,7 +265,7 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
       }
       else
       {
-        console.log(difficulty.diffId + " "+ mapSongName + " " + difficulty.name)
+        recreateSRList = true;
       }
     }
     tableText += "<td>"+ String(currentSr).replace(".",",") +"</td>";
@@ -280,22 +286,122 @@ document.getElementById("zipInput").addEventListener("change", async (event) => 
     //tableText += "<td>" + starDT + "</td>";
     //tableText += "<td>" + starHT + "</td>";
     difficulty.accuracy = 100;
-    //let pp = ppFormulas["originalCalculate"](difficulty);
-    //pp = Math.round(pp);
-    //tableText += "<td>"+ pp +"</td>";
-    //tableText += "<td>NaN</td>";
-    //let starwo = starFormulas["valerusReworkWoTS"](difficulty);
-    //starwo = Math.round(starwo * 100) / 100
-    //if (starwo == star)
-    //{
-    //  tableText += "<td>"+ starwo +" (unchanged)</td>";
-    //}
-    //else
-    //{
-    //  tableText += "<td>"+ starwo +"</td>";
-    //}
-    
+    let pp = ppFormulas["valerusRework"](difficulty);
+    pp = Math.round(pp);
+
+    let currentPP = -1;
+    if (diffPPId.includes(difficulty.diffId))
+    {
+      currentPP = diffPPValues[diffPPId.indexOf(difficulty.diffId)];
+    }
+    else
+    {
+      recreatePPList = true;
+    }
+    tableText += "<td>"+ String(currentPP).replace(".",",") +"</td>";
+    colorR = 0;
+    colorG = 0;
+    colorB = 0;
+    if (currentPP > pp)
+    {
+      let changeSize = Math.min(currentPP/pp, 2) / 2;
+      colorG = Math.round(0 + 250*changeSize);
+    }
+    else if (currentPP < pp)
+    {
+      let changeSize = Math.min(pp/currentPP, 2) / 2;
+      colorR = Math.round(0 + 250*changeSize);
+    }
+    tableText += "<td style=\"color:rgb("+colorR+","+colorG+","+colorB+");\">"+ String(pp).replace(".",",") +"</td>";
     tableText += "</tr>";
   }
+
+  if (recreateSRList)
+  {
+    let textDiffId = "";
+    let textValue = "";
+    let previousMapSong = "";
+    for (const difficulty of difficultyList)
+    {
+      let currentSr = -1;
+      let mapSongName = "";
+      for (const beatmap of beatmapList)
+      {
+        if (beatmap.mapsetId == difficulty.mapsetId)
+        {
+          mapSongName = beatmap.songName;
+          for (const beatmapDiff of beatmap.difficulties)
+          {
+            if (beatmapDiff.diffId == difficulty.diffId)
+            {
+              if (beatmapDiff.starRating != null)
+                currentSr = beatmapDiff.starRating;
+              break;
+            }
+          }
+          break;
+        }      
+      }
+      if (currentSr != -1)
+        continue;
+      if (previousMapSong != mapSongName)
+      {
+        textValue += "\n";
+        textDiffId += "\n";
+      }
+      if (textValue != "")
+        textValue += "\n";
+      if (diffSrId.includes(difficulty.diffId))
+        textValue += "    " + diffSrValues[diffSrId.indexOf(difficulty.diffId)] + ", //"+ mapSongName + " " + difficulty.name;
+      else
+        textValue += "    x, //"+ mapSongName + " " + difficulty.name;
+      
+      if (textDiffId != "")
+        textDiffId += "\n";
+      textDiffId += "    \""+difficulty.diffId + "\", //"+ mapSongName + " " + difficulty.name;
+      previousMapSong = mapSongName;
+    } 
+    text = "diffSrValues = [\n"+textValue+"\n];\ndiffSrId = [\n"+textDiffId+"\n];";
+    console.log(text);
+  }
+
+  if (recreatePPList)
+  {
+    let textDiffId = "";
+    let textValue = "";
+    let previousMapSong = "";
+    for (const difficulty of difficultyList)
+    {
+      let mapSongName = "";
+      for (const beatmap of beatmapList)
+      {
+        if (beatmap.mapsetId == difficulty.mapsetId)
+        {
+          mapSongName = beatmap.songName;
+          break;
+        }      
+      }
+      if (previousMapSong != mapSongName)
+      {
+        textValue += "\n";
+        textDiffId += "\n";
+      }
+      if (textValue != "")
+        textValue += "\n";
+      if (diffPPId.includes(difficulty.diffId))
+        textValue += "    " + diffPPValues[diffPPId.indexOf(difficulty.diffId)] + ", //"+ mapSongName + " " + difficulty.name;
+      else
+        textValue += "    x, //"+ mapSongName + " " + difficulty.name;
+      
+      if (textDiffId != "")
+        textDiffId += "\n";
+      textDiffId += "    \""+difficulty.diffId + "\", //"+ mapSongName + " " + difficulty.name;
+      previousMapSong = mapSongName;
+    } 
+    text = "diffPPValues = [\n"+textValue+"\n];\ndiffPPId = [\n"+textDiffId+"\n];";
+    console.log(text);
+  }
+
+
   table.innerHTML = tableText;
 });
